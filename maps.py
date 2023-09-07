@@ -2,10 +2,19 @@ import folium
 from locations import locations, iconos
 from streamlit_folium import folium_static
 from folium.features import CustomIcon
+#import googlemaps
 
 def create_map():
+
     m = folium.Map(location=[20.0410054,-90.2256905], zoom_start=13)
     folium.Marker(location=[20.0410054,-90.2256905], tooltip='Tu ubicación').add_to(m)
+
+    #m = folium.Map(location=[location['location']['lat'], location['location']['lng']], zoom_start=13)
+    #folium.Marker(location=[location['location']['lat'], location['location']['lng']], tooltip='Tu ubicación').add_to(m)
+
+    #gmaps = googlemaps.Client(key='AIzaSyChU5WCul4HUz413FR4wVEMKmsElDm2DFk')
+    
+    #location = gmaps.geolocate()
 
     for coord, icono_path in zip(locations, iconos):
         folium.Marker(
