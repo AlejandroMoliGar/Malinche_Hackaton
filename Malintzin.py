@@ -1,15 +1,14 @@
-import openai
-import pyttsx3
 import streamlit as st
+from langdetect import detect
+import time
 import speech_recognition as sr
-
-openai.api_key = "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"
-
-engine = pyttsx3.init()
-recognizer = sr.Recognizer()
+from config import google_api_key, google_cse_id
+from voice import recognizer, engine
+from google_images import buscar_imagenes
+import openai
 
 st.title("Chatbot con voz")
-st.image("resouces/Malintzin.png", use_column_width=True)
+
 if st.button("Habilitar Reconocimiento de Voz"):
     st.write("Habla ahora...")
     with sr.Microphone() as source:
@@ -18,7 +17,13 @@ if st.button("Habilitar Reconocimiento de Voz"):
         st.write("Escuchado, procesando...")
 
     try:
-        prompt = recognizer.recognize_google(audio, language="es-ES")
+        detected_language = detect(recognizer.recognize_google(audio, language="es-MX"))
+        st.write(f"Idioma detectado: {detected_language}")
+        if detected_language == "es":
+            prompt = recognizer.recognize_google(audio, language="es-MX")
+        else:
+            prompt = recognizer.recognize_google(audio, language="en-US")
+
         st.write("Pregunta (Reconocimiento de Voz):", prompt)
 
         if prompt.lower() == "exit":
@@ -33,6 +38,23 @@ if st.button("Habilitar Reconocimiento de Voz"):
 
                 response_text = completion.choices[0].text
                 st.write("Respuesta:", response_text)
+
+                # Detiene cualquier reproducción anterior
+                engine.stop()
+
+                # Buscar imágenes relacionadas con la respuesta
+                images = buscar_imagenes(response_text, google_api_key, google_cse_id)
+                if images:
+                    num_images = len(images)
+                    num_groups = num_images // 5 + (num_images % 5 > 0)  # Redondeo hacia arriba
+                    for i in range(num_groups):
+                        st.write(f"Grupo {i + 1}")
+                        group_images = images[i*5 : (i+1)*5]
+                        for image in group_images:
+                            st.image(image['link'])
+                            time.sleep(2)  # Espera 2 segundos entre imágenes
+
+                # Reproduce la respuesta
                 engine.say(response_text)
                 engine.runAndWait()
             except Exception as e:
