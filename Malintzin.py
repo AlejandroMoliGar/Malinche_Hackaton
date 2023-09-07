@@ -9,7 +9,7 @@ engine = pyttsx3.init()
 recognizer = sr.Recognizer()
 
 st.title("Chatbot con voz")
-st.image("resouces/Malintzin.png", use_column_width=True)
+
 if st.button("Habilitar Reconocimiento de Voz"):
     st.write("Habla ahora...")
     with sr.Microphone() as source:
