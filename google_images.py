@@ -7,7 +7,7 @@ def buscar_imagenes(prompt, google_api_key, google_cse_id):
         'key': google_api_key,
         'cx': google_cse_id,
         'searchType': 'image',
-        'num': 5
+        'num': 1
     }
     response = requests.get(base_url, params=params)
     if response.status_code == 200:
