@@ -8,13 +8,11 @@ import openai
 from langdetect.lang_detect_exception import LangDetectException
 from speech_recognition import WaitTimeoutError
 
-def chatbot():
+def chatbot(prompt, google_api_key, google_cse_id):
     st.title("Chatbot con voz")
-    col1, col2 = st.columns(2)
 
-    with col1:
-        proceso_en_curso = False
-    
+    proceso_en_curso = False
+
     if not proceso_en_curso:
         proceso_en_curso = st.button("Habilitar Reconocimiento de Voz")
         if proceso_en_curso:
@@ -26,7 +24,7 @@ def chatbot():
                 except WaitTimeoutError:
                     st.error("El tiempo de espera se agotó. ¿Puedes repetir la pregunta?")
                     proceso_en_curso = False
-                    return  # Salir de la función si ocurre un error
+                    return
 
                 st.write("Escuchado, procesando...")
 
@@ -38,21 +36,7 @@ def chatbot():
                 else:
                     prompt = recognizer.recognize_google(audio, language="en-US")
 
-<<<<<<< HEAD
-                    def imagenes():
-                        images = buscar_imagenes(response_text, google_api_key, google_cse_id)
-                        if images:
-                            num_images = len(images)
-                            num_groups = num_images // 5 + (num_images % 5 > 0)
-                            for i in range(num_groups):
-                                st.write(f"Grupo {i + 1}")
-                                group_images = images[i*5 : (i+1)*5]
-                                for image in group_images:
-                                    st.image(image['link'])
-                                    time.sleep(2)
-=======
                 st.write("Pregunta (Reconocimiento de Voz):", prompt)
->>>>>>> 1b58002d8cae261c075450a958a76a6739d93058
 
                 if prompt.lower() == "exit":
                     st.write("Saliendo del programa...")
@@ -65,19 +49,19 @@ def chatbot():
                         )
 
                         response_text = completion.choices[0].text
-                        st.write("Respuesta:", response_text, font='small')
+                        st.write("Respuesta:", response_text)
 
                         engine.stop()
-                        with col2:
-                            images = buscar_imagenes(response_text, google_api_key, google_cse_id)
-                            if images:
-                                num_images = len(images)
-                                num_groups = num_images // 5 + (num_images % 5 > 0)
-                                for i in range(num_groups):
-                                    st.write(f"Grupo {i + 1}")
-                                    group_images = images[i*5 : (i+1)*5]
-                                    for image in group_images:
-                                        st.image(image['link'])
+
+                        images = buscar_imagenes(prompt, google_api_key, google_cse_id)
+                        if images:
+                            num_images = len(images)
+                            num_groups = num_images // 5 + (num_images % 5 > 0)
+                            for i in range(num_groups):
+                                st.write(f"Grupo {i + 1}")
+                                group_images = images[i*5 : (i+1)*5]
+                                for image in group_images:
+                                    st.image(image['link'], caption=image['title'], use_column_width=True)
 
                         engine.say(response_text)
                         engine.runAndWait()

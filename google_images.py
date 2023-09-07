@@ -1,10 +1,9 @@
 import requests
 
-# Función para buscar imágenes en Google Images
-def buscar_imagenes(query, google_api_key, google_cse_id):
+def buscar_imagenes(prompt, google_api_key, google_cse_id):
     base_url = 'https://www.googleapis.com/customsearch/v1'
     params = {
-        'q': query,
+        'q': prompt,
         'key': google_api_key,
         'cx': google_cse_id,
         'searchType': 'image',
