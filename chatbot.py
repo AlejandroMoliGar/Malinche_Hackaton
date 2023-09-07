@@ -38,7 +38,21 @@ def chatbot():
                 else:
                     prompt = recognizer.recognize_google(audio, language="en-US")
 
+<<<<<<< HEAD
+                    def imagenes():
+                        images = buscar_imagenes(response_text, google_api_key, google_cse_id)
+                        if images:
+                            num_images = len(images)
+                            num_groups = num_images // 5 + (num_images % 5 > 0)
+                            for i in range(num_groups):
+                                st.write(f"Grupo {i + 1}")
+                                group_images = images[i*5 : (i+1)*5]
+                                for image in group_images:
+                                    st.image(image['link'])
+                                    time.sleep(2)
+=======
                 st.write("Pregunta (Reconocimiento de Voz):", prompt)
+>>>>>>> 1b58002d8cae261c075450a958a76a6739d93058
 
                 if prompt.lower() == "exit":
                     st.write("Saliendo del programa...")
