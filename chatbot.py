@@ -10,6 +10,7 @@ import openai
 def chatbot():
     st.title("Chatbot con voz")
 
+    # Habilitar el micrófono
     if st.button("Habilitar Reconocimiento de Voz"):
         st.write("Habla ahora...")
         with sr.Microphone() as source:
